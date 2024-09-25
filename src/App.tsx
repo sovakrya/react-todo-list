@@ -20,8 +20,42 @@ export default class App extends React.Component {
     return this.state.todos;
   };
 
+  componentDidMount(): void {
+    this.getTodosFromFetch();
+  }
+
   onAddedTodo = (todo: Todo) => {
-    const todos = [...this.state.todos, todo];
+    const todos = [todo, ...this.state.todos];
+    this.setState({
+      todos,
+    });
+  };
+
+  onCompletedTodo = (todo: Todo) => {
+    const todos = [...this.state.todos];
+    const idx = todos.findIndex((i) => i.id === todo.id);
+    todos[idx] = todo;
+
+    this.setState({
+      todos,
+    });
+  };
+
+  onUpdateTodo = (todo: Todo) => {
+    const todos = [...this.state.todos];
+    const idx = todos.findIndex((i) => i.id === todo.id);
+    todos[idx] = todo;
+
+    this.setState({
+      todos,
+    });
+  };
+
+  onDeleteTodo = (todoId: number) => {
+    const todos = [...this.state.todos];
+    const idx = todos.findIndex((i) => i.id === todoId);
+    todos.splice(idx, 1);
+
     this.setState({
       todos,
     });
@@ -32,15 +66,21 @@ export default class App extends React.Component {
       <div className="app-main-box">
         <TodoHeader onAddedTodo={this.onAddedTodo} />
 
-        <div>
-          <div>
-            <button>Отметить все!</button>
-            <button>Выполнить все!</button>
+        <div className="todo-list-box">
+          <div className="todo-list-actions-box">
+            <button className="todo-list-btn">Отметить все!</button>
+            <button className="todo-list-btn">Выполнить все!</button>
           </div>
 
-          <div>
+          <div className="todo-item-wrapper">
             {this.state.todos.map((todo) => (
-              <TodoItem todo={todo} key={todo.id} />
+              <TodoItem
+                todo={todo}
+                key={todo.id}
+                onCompletedTodo={this.onCompletedTodo}
+                onUpdateTodo={this.onUpdateTodo}
+                onDeleteTodo={this.onDeleteTodo}
+              />
             ))}
           </div>
         </div>

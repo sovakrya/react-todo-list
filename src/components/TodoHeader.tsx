@@ -16,6 +16,8 @@ export default class TodoHeader extends React.Component<{
       completed: false,
       userId: 1,
     }).then(this.props.onAddedTodo);
+
+    this.inputRef.current.value = "";
   };
 
   render(): React.ReactNode {
