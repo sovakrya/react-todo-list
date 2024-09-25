@@ -1,21 +1,23 @@
-import React, { createRef, MutableRefObject, RefObject, useRef } from "react";
+import React, { useState } from "react";
 import "../styles/TodoHeader.css";
 import { addTodo, Todo } from "../service/todo";
 
-export default function TodoHeader(onAddedTodo: (todo: Todo) => void) {
-  const inputRef = useRef<HTMLInputElement>(null);
+export default function TodoHeader(props: {
+  onAddedTodo: (todo: Todo) => void;
+}) {
+  const [todoTitle, setTodoTitle] = useState("");
 
   const addTodoFromFetch = () => {
-    if (!inputRef.current) {
+    if (!todoTitle) {
       return;
     }
     addTodo({
-      title: inputRef.current.value,
+      title: todoTitle,
       completed: false,
       userId: 1,
-    }).then(onAddedTodo);
+    }).then(props.onAddedTodo);
 
-    inputRef.current.value = "";
+    setTodoTitle("");
   };
 
   return (
@@ -27,7 +29,7 @@ export default function TodoHeader(onAddedTodo: (todo: Todo) => void) {
           className="header-input"
           type="text"
           placeholder="Например: погладить кота"
-          ref={inputRef}
+          onChange={(e) => setTodoTitle(e.target.value)}
         />
         <button className="header-btn" onClick={addTodoFromFetch}>
           Добавить
