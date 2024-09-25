@@ -61,29 +61,57 @@ export default class App extends React.Component {
     });
   };
 
+  deleteAllTodos = () => {
+    this.setState({
+      todos: [],
+    });
+  };
+
+  completedAllTodos = () => {
+    const todos = [...this.state.todos];
+
+    todos.map((todo) => {
+      return (todo.completed = true);
+    });
+
+    this.setState({
+      todos,
+    });
+  };
+
   render(): React.ReactNode {
     return (
       <div className="app-main-box">
         <TodoHeader onAddedTodo={this.onAddedTodo} />
+        {this.state.todos.length ? (
+          <div className="todo-list-box">
+            <div className="todo-list-actions-box">
+              <button
+                className="todo-list-btn"
+                onClick={this.completedAllTodos}
+              >
+                Отметить все!
+              </button>
+              <button className="todo-list-btn" onClick={this.deleteAllTodos}>
+                Выполнить все!
+              </button>
+            </div>
 
-        <div className="todo-list-box">
-          <div className="todo-list-actions-box">
-            <button className="todo-list-btn">Отметить все!</button>
-            <button className="todo-list-btn">Выполнить все!</button>
+            <div className="todo-item-wrapper">
+              {this.state.todos.map((todo) => (
+                <TodoItem
+                  todo={todo}
+                  key={todo.id}
+                  onCompletedTodo={this.onCompletedTodo}
+                  onUpdateTodo={this.onUpdateTodo}
+                  onDeleteTodo={this.onDeleteTodo}
+                />
+              ))}
+            </div>
           </div>
-
-          <div className="todo-item-wrapper">
-            {this.state.todos.map((todo) => (
-              <TodoItem
-                todo={todo}
-                key={todo.id}
-                onCompletedTodo={this.onCompletedTodo}
-                onUpdateTodo={this.onUpdateTodo}
-                onDeleteTodo={this.onDeleteTodo}
-              />
-            ))}
-          </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     );
   }
