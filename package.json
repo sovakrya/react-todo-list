@@ -42,7 +42,10 @@
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": { "@types/bun": "latest", "prettier": "^3.3.3" },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
 }

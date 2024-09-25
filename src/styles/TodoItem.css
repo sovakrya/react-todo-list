@@ -1,0 +1,42 @@
+.todo-main-box {
+  display: flex;
+  gap: 6px;
+  padding: 12px;
+  border-bottom: solid 1px rgb(139, 111, 137);
+}
+
+.todo-title {
+  font-size: 18px;
+  flex-grow: 1;
+}
+
+.todo-title-completed {
+  text-decoration: line-through;
+}
+
+.todo-input {
+  flex-grow: 1;
+  height: 28px;
+  border: solid 1px rgb(180, 180, 180);
+  border-radius: 5px;
+}
+
+.todo-actions-box {
+  display: flex;
+  gap: 6px;
+}
+
+.todo-btn {
+  background: none;
+  border-radius: 5px;
+  border: solid 2.5px rgb(162, 92, 209);
+  cursor: pointer;
+  font-size: 14px;
+  transition: ease-in-out 0.5s;
+  align-self: center;
+}
+
+.todo-btn:hover {
+  background-color: rgb(162, 92, 209);
+  color: aliceblue;
+}
