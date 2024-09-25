@@ -1,0 +1,7 @@
+.todo-main-box {
+    display: flex;
+    gap: 6px;
+    padding: 14px;
+    border-radius: 16px;
+    box-shadow: 6px 6px 12px rgb(199, 199, 199);
+}

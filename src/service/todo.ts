@@ -2,17 +2,17 @@ export type Todo = {
   id: number;
   title: string;
   completed: boolean;
-  userId: number;
+  userId: 1;
 };
 
-export async function getTodos(): Promise<Todo> {
+export async function getTodos(): Promise<Todo[]> {
   const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`);
 
   return resp.json();
 }
 
-export async function addTodo(todo: Todo) {
-  const resp = await fetch(`https://jsonplaceholder.typicode.com/todos}`, {
+export async function addTodo(todo: Omit<Todo, "id">): Promise<Todo> {
+  const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`, {
     method: "POST",
     body: JSON.stringify({
       title: todo.title,
