@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import "./App.css";
 import TodoHeader from "./components/TodoHeader";
 import TodoItem from "./components/TodoItem";
 import { getTodos, Todo } from "./service/todo";
+import styled from "styled-components";
 
 export default function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -57,22 +57,70 @@ export default function App() {
     setTodos(tempTodos);
   }
 
+  const AppMainBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  `;
+
+  const TodoListBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 6px 6px 12px rgb(199, 199, 199);
+    width: 500px;
+  `;
+  const TodoListActionsBox = styled.div`
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    width: 100%;
+    padding: 6px;
+    border-bottom: solid 2px rgb(139, 111, 137);
+  `;
+
+  const TodoListBtn = styled.button`
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: rgb(162, 92, 209);
+    border: none;
+    height: 30px;
+    color: rgb(255, 255, 255);
+    font-weight: 600;
+
+    &:hover {
+      background: none;
+      border: solid 2.5px rgb(162, 92, 209);
+      color: black;
+    }
+  `;
+
+  const TodoItemWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  `;
+
   return (
-    <div className="app-main-box">
+    <AppMainBox>
       <TodoHeader onAddedTodo={onAddedTodo} />
 
       {todos.length ? (
-        <div className="todo-list-box">
-          <div className="todo-list-actions-box">
-            <button className="todo-list-btn" onClick={completedAllTodos}>
-              Отметить все!
-            </button>
-            <button className="todo-list-btn" onClick={() => setTodos([])}>
+        <TodoListBox>
+          <TodoListActionsBox>
+            <TodoListBtn onClick={completedAllTodos}>Отметить все!</TodoListBtn>
+            <TodoListBtn onClick={() => setTodos([])}>
               Выполнить все!
-            </button>
-          </div>
+            </TodoListBtn>
+          </TodoListActionsBox>
 
-          <div className="todo-item-wrapper">
+          <TodoItemWrapper>
             {todos.map((todo) => (
               <TodoItem
                 todo={todo}
@@ -82,11 +130,11 @@ export default function App() {
                 onUpdateTodo={onUpdateTodo}
               />
             ))}
-          </div>
-        </div>
+          </TodoItemWrapper>
+        </TodoListBox>
       ) : (
         <></>
       )}
-    </div>
+    </AppMainBox>
   );
 }
