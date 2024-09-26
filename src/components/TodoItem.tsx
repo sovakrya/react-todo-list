@@ -1,6 +1,6 @@
-import { createRef, RefObject, useState } from "react";
+import { useState } from "react";
 import { deleteTodo, Todo, updateTodo } from "../service/todo";
-import "../styles/TodoItem.css";
+import styled from "styled-components";
 
 export default function TodoItem(props: {
   todo: Todo;
@@ -35,46 +35,77 @@ export default function TodoItem(props: {
     deleteTodo(props.todo.id).then(() => props.onDeleteTodo(props.todo.id));
   }
 
+  const TodoMainBox = styled.div`
+    display: flex;
+    gap: 6px;
+    padding: 12px;
+    border-bottom: solid 1px rgb(139, 111, 137);
+  `;
+
+  const TodoTitle = styled.span`
+    font-size: 18px;
+    flex-grow: 1;
+  `;
+
+  const TodoTitleComplited = styled(TodoTitle)`
+    text-decoration: line-through;
+  `;
+
+  const TodoInput = styled.input`
+    flex-grow: 1;
+    height: 28px;
+    border: solid 1px rgb(180, 180, 180);
+    border-radius: 5px;
+  `;
+
+  const TodoActionsBox = styled.div`
+    display: flex;
+    gap: 6px;
+  `;
+
+  const TodoBtn = styled.button`
+    background: none;
+    border-radius: 5px;
+    border: solid 2.5px rgb(162, 92, 209);
+    cursor: pointer;
+    font-size: 14px;
+    transition: ease-in-out 0.5s;
+    align-self: center;
+
+    &:hover {
+      background-color: rgb(162, 92, 209);
+      color: aliceblue;
+    }
+  `;
+
   return (
-    <div className="todo-main-box">
+    <TodoMainBox>
       <input
         type="checkbox"
         checked={props.todo.completed}
         onClick={completedTodoFromFetch}
       />
       {!isEdit ? (
-        <span
-          className={`todo-title${props.todo.completed ? " todo-title-completed" : ""}`}
-        >
-          {props.todo.title}
-        </span>
+        !props.todo.completed ? (
+          <TodoTitle>{props.todo.title}</TodoTitle>
+        ) : (
+          <TodoTitleComplited>{props.todo.title}</TodoTitleComplited>
+        )
       ) : (
-        <input
-          type="text"
-          className="todo-input"
-          onChange={(e) => setTodoTitle(e.target.value)}
-        />
+        <TodoInput type="text" onChange={(e) => setTodoTitle(e.target.value)} />
       )}
 
       {!isEdit ? (
-        <div className="todo-actions-box">
-          <button className="todo-btn" onClick={() => setIsEdit(true)}>
-            Редактировать
-          </button>
-          <button className="todo-btn" onClick={deleteTodoFromFetch}>
-            Выполнить
-          </button>
-        </div>
+        <TodoActionsBox>
+          <TodoBtn onClick={() => setIsEdit(true)}>Редактировать</TodoBtn>
+          <TodoBtn onClick={deleteTodoFromFetch}>Выполнить</TodoBtn>
+        </TodoActionsBox>
       ) : (
-        <div className="todo-actions-box">
-          <button className="todo-btn" onClick={() => setIsEdit(false)}>
-            Отменить
-          </button>
-          <button className="todo-btn" onClick={updateTodoFromFetch}>
-            Сохранить
-          </button>
-        </div>
+        <TodoActionsBox>
+          <TodoBtn onClick={() => setIsEdit(false)}>Отменить</TodoBtn>
+          <TodoBtn onClick={updateTodoFromFetch}>Сохранить</TodoBtn>
+        </TodoActionsBox>
       )}
-    </div>
+    </TodoMainBox>
   );
 }
