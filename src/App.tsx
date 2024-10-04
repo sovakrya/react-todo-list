@@ -67,22 +67,22 @@ export default function App() {
     dispatch(fetchTodos());
   }, []);
 
-
-
-
-
   return (
     <AppMainBox>
       <TodoHeader />
 
       {status === "loading" && <h2>Loading...</h2>}
-      {error && <h2>{error}</h2>}
+      {error && <h2>An error occerd: {error}</h2>}
 
       {todos.length ? (
         <TodoListBox>
           <TodoListActionsBox>
-            <TodoListBtn onClick={() => dispatch(completeAllTodo())}>Отметить все!</TodoListBtn>
-            <TodoListBtn onClick={() => dispatch(deleteAllTodo())}>Выполнить все!</TodoListBtn>
+            <TodoListBtn onClick={() => dispatch(completeAllTodo())}>
+              Отметить все!
+            </TodoListBtn>
+            <TodoListBtn onClick={() => dispatch(deleteAllTodo())}>
+              Выполнить все!
+            </TodoListBtn>
           </TodoListActionsBox>
 
           <TodoItemWrapper>

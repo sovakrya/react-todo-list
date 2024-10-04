@@ -7,49 +7,42 @@ export type Todo = {
   userId: 1;
 };
 
-export const fetchTodos = createAsyncThunk<Todo[]>(
-  "todos/fetchTodos",
-  async function () {
+export const fetchTodos = createAsyncThunk<
+  Todo[],
+  void,
+  { rejectValue: string }
+>("todos/fetchTodos", async function (_, { rejectWithValue }) {
+  try {
     const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`);
-
-    return resp.json();
-  }
-);
-
-export const addNewTodo = createAsyncThunk(
-  "todos/addNewTodo",
-  async function (todo: Omit<Todo, "id">, { dispatch }) {
-    const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`, {
-      method: "POST",
-      body: JSON.stringify({
-        title: todo.title,
-        completed: todo.completed,
-        userId: todo.userId,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
-
     if (!resp.ok) {
-      throw new Error("cant add todo. Server error");
+      throw new Error("SERVER_ERROR");
     }
 
-    dispatch(addTodo(todo));
-
     return resp.json();
-  }
-);
+  } catch (error) {
+    let msg: string;
+    if (error instanceof Error) {
+      msg = error.message;
+    } else {
+      msg = String(error);
+    }
 
-export const updateTodoFetch = createAsyncThunk(
-  "todos/updateTodoFetch",
-  async function (todo: Todo, { dispatch }) {
-    const resp = await fetch(
-      `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
-      {
-        method: "PUT",
+    return rejectWithValue(msg);
+  }
+});
+
+export const addNewTodo = createAsyncThunk<
+  void,
+  Omit<Todo, "id">,
+  { rejectValue: string }
+>(
+  "todos/addNewTodo",
+
+  async function (todo: Omit<Todo, "id">, { dispatch, rejectWithValue }) {
+    try {
+      const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`, {
+        method: "POST",
         body: JSON.stringify({
-          id: todo.id,
           title: todo.title,
           completed: todo.completed,
           userId: todo.userId,
@@ -57,25 +50,100 @@ export const updateTodoFetch = createAsyncThunk(
         headers: {
           "Content-type": "application/json; charset=UTF-8",
         },
-      }
-    );
+      });
 
-    dispatch(updateTodo(todo));
+      if (!resp.ok) {
+        throw new Error("cant add todo. Server error");
+      }
+
+      const data = await resp.json();
+      dispatch(addTodo(data));
+    } catch (err) {
+      let msg: string;
+      if (err instanceof Error) {
+        msg = err.message;
+      } else {
+        msg = String(err);
+      }
+
+      return rejectWithValue(msg);
+    }
   }
 );
 
-export const removeTodo = createAsyncThunk(
+export const updateTodoFetch = createAsyncThunk<
+  void,
+  Todo,
+  { rejectValue: string }
+>(
+  "todos/updateTodoFetch",
+  async function (todo: Todo, { dispatch, rejectWithValue }) {
+    try {
+      const resp = await fetch(
+        `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            id: todo.id,
+            title: todo.title,
+            completed: todo.completed,
+            userId: todo.userId,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+
+      if (!resp.ok) {
+        throw new Error("cant update todo. Server error");
+      }
+
+      dispatch(updateTodo(todo));
+    } catch (err) {
+      let msg: string;
+      if (err instanceof Error) {
+        msg = err.message;
+      } else {
+        msg = String(err);
+      }
+
+      return rejectWithValue(msg);
+    }
+  }
+);
+
+export const removeTodo = createAsyncThunk<
+  void,
+  number,
+  { rejectValue: string }
+>(
   "todo/removeTodo",
 
-  async function (todoId: number, { dispatch }) {
-    const resp = await fetch(
-      `https://jsonplaceholder.typicode.com/todos/${todoId}`,
-      {
-        method: "DELETE",
-      }
-    );
+  async function (todoId: number, { dispatch, rejectWithValue }) {
+    try {
+      const resp = await fetch(
+        `https://jsonplaceholder.typicode.com/todos/${todoId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-    dispatch(deleteTodo(todoId));
+      if (!resp.ok) {
+        throw new Error("cant remove todo. Server error");
+      }
+
+      dispatch(deleteTodo(todoId));
+    } catch (err) {
+      let msg: string;
+      if (err instanceof Error) {
+        msg = err.message;
+      } else {
+        msg = String(err);
+      }
+
+      return rejectWithValue(msg);
+    }
   }
 );
 
@@ -117,7 +185,9 @@ const todoSlice = createSlice({
     },
 
     completeAllTodo(state) {
-      state.todos.map((todo) => { return todo.completed = true});
+      state.todos.map((todo) => {
+        return (todo.completed = true);
+      });
     },
   },
   extraReducers: (builder) => {
@@ -130,9 +200,32 @@ const todoSlice = createSlice({
       state.error = "";
     });
 
-    builder.addCase(fetchTodos.rejected, (state) => {
+    builder.addCase(fetchTodos.rejected, (state, action) => {
       state.status = "rejected";
-      state.error = "failed to add tasks, server error";
+      if (action.payload) {
+        state.error = action.payload;
+      }
+    });
+
+    builder.addCase(addNewTodo.rejected, (state, action) => {
+      state.status = "rejected";
+      if (action.payload) {
+        state.error = action.payload;
+      }
+    });
+
+    builder.addCase(updateTodoFetch.rejected, (state, action) => {
+      state.status = "rejected";
+      if (action.payload) {
+        state.error = action.payload;
+      }
+    });
+
+    builder.addCase(removeTodo.rejected, (state, action) => {
+      state.status = "rejected";
+      if (action.payload) {
+        state.error = action.payload;
+      }
     });
   },
 });
