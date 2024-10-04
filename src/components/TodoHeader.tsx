@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { addTodo, Todo } from "../service/todo";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { addNewTodo } from "../store/todoSlice";
 
 const HeaderMainBox = styled.div`
   display: flex;
@@ -47,19 +50,16 @@ const HeaderBtn = styled.button`
 
 export default function TodoHeader() {
   const [todoTitle, setTodoTitle] = useState("");
+  const dispatch = useDispatch<AppDispatch>()
 
-  const addTodoFromFetch = () => {
-    // if (!todoTitle) {
-    //   return;
-    // }
-    // addTodo({
-    //   title: todoTitle,
-    //   completed: false,
-    //   userId: 1,
-    // }).then(props.onAddedTodo);
+  function addTodoFromFetch(){
+    if(!todoTitle){
+      return
+    }
+    dispatch(addNewTodo({completed: false, title: todoTitle, userId: 1}))   
+    setTodoTitle("")
+  }
 
-    // setTodoTitle("");
-  };
 
   return (
     <HeaderMainBox>
