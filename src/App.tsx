@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import TodoHeader from "./components/TodoHeader";
 import TodoItem from "./components/TodoItem";
 import { getTodos, Todo } from "./service/todo";
-import { fetchTodos } from "./store/todoSlice";
+import { completeAllTodo, deleteAllTodo, fetchTodos } from "./store/todoSlice";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -67,13 +67,9 @@ export default function App() {
     dispatch(fetchTodos());
   }, []);
 
-  function completedAllTodos() {
-    // const tempTodos = [...todos];
-    // tempTodos.map((todo) => {
-    //   return (todo.completed = true);
-    // });
-    // setTodos(tempTodos);
-  }
+
+
+
 
   return (
     <AppMainBox>
@@ -85,8 +81,8 @@ export default function App() {
       {todos.length ? (
         <TodoListBox>
           <TodoListActionsBox>
-            <TodoListBtn>Отметить все!</TodoListBtn>
-            <TodoListBtn>Выполнить все!</TodoListBtn>
+            <TodoListBtn onClick={() => dispatch(completeAllTodo())}>Отметить все!</TodoListBtn>
+            <TodoListBtn onClick={() => dispatch(deleteAllTodo())}>Выполнить все!</TodoListBtn>
           </TodoListActionsBox>
 
           <TodoItemWrapper>

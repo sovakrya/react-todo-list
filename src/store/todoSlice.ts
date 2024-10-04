@@ -111,6 +111,14 @@ const todoSlice = createSlice({
 
       state.todos.splice(idx, 1);
     },
+
+    deleteAllTodo(state) {
+      state.todos = [];
+    },
+
+    completeAllTodo(state) {
+      state.todos.map((todo) => { return todo.completed = true});
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
@@ -129,7 +137,13 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, updateTodo, deleteTodo } = todoSlice.actions;
+export const {
+  addTodo,
+  updateTodo,
+  deleteTodo,
+  deleteAllTodo,
+  completeAllTodo,
+} = todoSlice.actions;
 
 const todoReduser = todoSlice.reducer;
 
