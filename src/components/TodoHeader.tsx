@@ -27,7 +27,7 @@ const HeaderAcrionsBox = styled.div`
   width: 100%;
 `;
 
-const HeadetInput = styled.input`
+const HeadertInput = styled.input`
   flex-grow: 1;
   height: 28px;
   border: solid 1px rgb(180, 180, 180);
@@ -56,8 +56,11 @@ export default function TodoHeader() {
     if(!todoTitle){
       return
     }
-    dispatch(addNewTodo({completed: false, title: todoTitle, userId: 1}))   
+    dispatch(addNewTodo({completed: false, title: todoTitle, userId: 1}))  
+    
+
     setTodoTitle("")
+    
   }
 
 
@@ -66,10 +69,11 @@ export default function TodoHeader() {
       <HeaderTitle>Todo list</HeaderTitle>
 
       <HeaderAcrionsBox>
-        <HeadetInput
+        <HeadertInput
           type="text"
           placeholder="Например: погладить кота"
           onChange={(e) => setTodoTitle(e.target.value)}
+          value={todoTitle}
         />
         <HeaderBtn onClick={addTodoFromFetch}>Добавить</HeaderBtn>
       </HeaderAcrionsBox>
