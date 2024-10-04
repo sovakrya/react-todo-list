@@ -45,7 +45,7 @@ const TodoBtn = styled.button`
   }
 `;
 
-export default function TodoItem({key, todo}: {key: number, todo: Todo }) {
+export default function TodoItem({todo} : {todo: Todo}) {
   const [isEdit, setIsEdit] = useState(false);
   const [todoTitle, setTodoTitle] = useState("");
 

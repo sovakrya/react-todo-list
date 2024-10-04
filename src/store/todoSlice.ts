@@ -7,7 +7,7 @@ export type Todo = {
     userId: 1;
   };
 
-export const fetchTodos = createAsyncThunk(
+export const fetchTodos = createAsyncThunk<Todo[]>(
   "todos/fetchTodos",
   async function ()  {
     const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`);
@@ -38,7 +38,7 @@ const todoSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
         state.status = "resolved"
-        state.todos.push(action.payload)
+        state.todos = action.payload
     })
     builder.addCase(fetchTodos.pending, (state) => {
         state.status = "loading"
