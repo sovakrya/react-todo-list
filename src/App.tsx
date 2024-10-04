@@ -71,13 +71,6 @@ export default function App() {
 
  
 
-  function onCompletedTodo(todo: Todo) {
-    // const tempTodos = [...todos];
-    // const idx = tempTodos.findIndex((i) => i.id === todo.id);
-    // tempTodos[idx] = todo;
-
-    // setTodos(tempTodos);
-  }
 
 
   function onDeleteTodo(todoId: number) {

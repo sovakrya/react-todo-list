@@ -18,7 +18,7 @@ export const fetchTodos = createAsyncThunk<Todo[]>(
 
 export const addNewTodo = createAsyncThunk(
   "todos/addNewTodo",
-  async function (todo: Omit<Todo, "id">, {dispatch}) {
+  async function (todo: Omit<Todo, "id">, { dispatch }) {
     const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`, {
       method: "POST",
       body: JSON.stringify({
@@ -31,20 +31,19 @@ export const addNewTodo = createAsyncThunk(
       },
     });
 
-    if(!resp.ok){
-      throw new Error("cant add todo. Server error")
+    if (!resp.ok) {
+      throw new Error("cant add todo. Server error");
     }
 
-      dispatch(addTodo(todo))
+    dispatch(addTodo(todo));
 
-      return resp.json()
-      
+    return resp.json();
   }
 );
 
 export const updateTodoFetch = createAsyncThunk(
   "todos/updateTodoFetch",
-  async function(todo: Todo, {dispatch}){
+  async function (todo: Todo, { dispatch }) {
     const resp = await fetch(
       `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
       {
@@ -61,9 +60,11 @@ export const updateTodoFetch = createAsyncThunk(
       }
     );
 
-    dispatch(updateTodo(todo))
+    dispatch(updateTodo(todo));
   }
-)
+);
+
+
 
 interface TodosState {
   todos: Todo[];
@@ -81,14 +82,18 @@ const todoSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    addTodo(state, action){
-      state.todos = [action.payload, ...state.todos]
+    addTodo(state, action) {
+      state.todos = [action.payload, ...state.todos];
     },
 
-    updateTodo(state, action){
-     const idx = state.todos.findIndex((todo) => todo.id === action.payload.id)
-     state.todos[idx] = action.payload
-    }
+    updateTodo(state, action) {
+      const idx = state.todos.findIndex(
+        (todo) => todo.id === action.payload.id
+      );
+      state.todos[idx] = action.payload;
+    },
+
+ 
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
@@ -107,7 +112,7 @@ const todoSlice = createSlice({
   },
 });
 
-export const {addTodo, updateTodo} = todoSlice.actions;
+export const { addTodo, updateTodo } = todoSlice.actions;
 
 const todoReduser = todoSlice.reducer;
 
