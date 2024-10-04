@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from ".";
 
 export type Todo = {
   id: number;
@@ -36,13 +35,35 @@ export const addNewTodo = createAsyncThunk(
       throw new Error("cant add todo. Server error")
     }
 
-      const data = await resp.json()
-
       dispatch(addTodo(todo))
-  
-  
+
+      return resp.json()
+      
   }
 );
+
+export const updateTodoFetch = createAsyncThunk(
+  "todos/updateTodoFetch",
+  async function(todo: Todo, {dispatch}){
+    const resp = await fetch(
+      `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          id: todo.id,
+          title: todo.title,
+          completed: todo.completed,
+          userId: todo.userId,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    );
+
+    dispatch(updateTodo(todo))
+  }
+)
 
 interface TodosState {
   todos: Todo[];
@@ -63,6 +84,11 @@ const todoSlice = createSlice({
     addTodo(state, action){
       state.todos = [action.payload, ...state.todos]
     },
+
+    updateTodo(state, action){
+     const idx = state.todos.findIndex((todo) => todo.id === action.payload.id)
+     state.todos[idx] = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
@@ -81,7 +107,7 @@ const todoSlice = createSlice({
   },
 });
 
-export const {addTodo} = todoSlice.actions;
+export const {addTodo, updateTodo} = todoSlice.actions;
 
 const todoReduser = todoSlice.reducer;
 

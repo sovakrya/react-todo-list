@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { deleteTodo, Todo, updateTodo } from "../service/todo";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { updateTodoFetch } from "../store/todoSlice";
 
 const TodoMainBox = styled.div`
   display: flex;
@@ -49,6 +52,8 @@ export default function TodoItem({todo} : {todo: Todo}) {
   const [isEdit, setIsEdit] = useState(false);
   const [todoTitle, setTodoTitle] = useState("");
 
+  const dispatch = useDispatch<AppDispatch>()
+
   function completedTodoFromFetch() {
     // updateTodo({
     //   id: props.todo.id,
@@ -59,13 +64,8 @@ export default function TodoItem({todo} : {todo: Todo}) {
   }
 
   function updateTodoFromFetch() {
-    // updateTodo({
-    //   id: props.todo.id,
-    //   title: todoTitle,
-    //   completed: props.todo.completed,
-    //   userId: props.todo.userId,
-    // }).then(props.onUpdateTodo);
-    // setIsEdit(false);
+    dispatch(updateTodoFetch({completed: todo.completed, id: todo.id, title: todoTitle, userId: todo.userId}))
+    setIsEdit(false);
   }
 
   function deleteTodoFromFetch() {
