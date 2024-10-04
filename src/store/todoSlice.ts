@@ -64,7 +64,20 @@ export const updateTodoFetch = createAsyncThunk(
   }
 );
 
+export const removeTodo = createAsyncThunk(
+  "todo/removeTodo",
 
+  async function (todoId: number, { dispatch }) {
+    const resp = await fetch(
+      `https://jsonplaceholder.typicode.com/todos/${todoId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    dispatch(deleteTodo(todoId));
+  }
+);
 
 interface TodosState {
   todos: Todo[];
@@ -93,7 +106,11 @@ const todoSlice = createSlice({
       state.todos[idx] = action.payload;
     },
 
- 
+    deleteTodo(state, action) {
+      const idx = state.todos.findIndex((todo) => todo.id === action.payload);
+
+      state.todos.splice(idx, 1);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
@@ -112,7 +129,7 @@ const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, updateTodo } = todoSlice.actions;
+export const { addTodo, updateTodo, deleteTodo } = todoSlice.actions;
 
 const todoReduser = todoSlice.reducer;
 

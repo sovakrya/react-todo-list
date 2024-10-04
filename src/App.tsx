@@ -59,41 +59,25 @@ const TodoItemWrapper = styled.div`
 `;
 
 export default function App() {
-  const todos = useSelector((state: RootState) => state.todos.todos)
-  const {status, error } = useSelector((state: RootState) => state.todos)
-  const dispatch = useDispatch<AppDispatch>()
-
-
+  const todos = useSelector((state: RootState) => state.todos.todos);
+  const { status, error } = useSelector((state: RootState) => state.todos);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-   dispatch(fetchTodos())
+    dispatch(fetchTodos());
   }, []);
-
- 
-
-
-
-  function onDeleteTodo(todoId: number) {
-    // const tempTodos = [...todos];
-    // const idx = tempTodos.findIndex((i) => i.id === todoId);
-    // tempTodos.splice(idx, 1);
-
-    // setTodos(tempTodos);
-  }
 
   function completedAllTodos() {
     // const tempTodos = [...todos];
-
     // tempTodos.map((todo) => {
     //   return (todo.completed = true);
     // });
-
     // setTodos(tempTodos);
   }
 
   return (
     <AppMainBox>
-      <TodoHeader  />
+      <TodoHeader />
 
       {status === "loading" && <h2>Loading...</h2>}
       {error && <h2>{error}</h2>}
@@ -101,18 +85,13 @@ export default function App() {
       {todos.length ? (
         <TodoListBox>
           <TodoListActionsBox>
-            <TodoListBtn >Отметить все!</TodoListBtn>
-            <TodoListBtn >
-              Выполнить все!
-            </TodoListBtn>
+            <TodoListBtn>Отметить все!</TodoListBtn>
+            <TodoListBtn>Выполнить все!</TodoListBtn>
           </TodoListActionsBox>
 
           <TodoItemWrapper>
             {todos.map((todo) => (
-              <TodoItem
-                key={todo.id}
-                todo={todo}
-              />
+              <TodoItem key={todo.id} todo={todo} />
             ))}
           </TodoItemWrapper>
         </TodoListBox>

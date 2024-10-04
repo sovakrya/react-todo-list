@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
-import { Todo, updateTodoFetch } from "../store/todoSlice";
+import { removeTodo, Todo, updateTodoFetch } from "../store/todoSlice";
 
 const TodoMainBox = styled.div`
   display: flex;
@@ -47,23 +47,37 @@ const TodoBtn = styled.button`
   }
 `;
 
-export default function TodoItem({todo} : {todo: Todo}) {
+export default function TodoItem({ todo }: { todo: Todo }) {
   const [isEdit, setIsEdit] = useState(false);
   const [todoTitle, setTodoTitle] = useState("");
 
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useDispatch<AppDispatch>();
 
   function completedTodoFromFetch() {
-    dispatch(updateTodoFetch({completed: !todo.completed, id: todo.id, title: todo.title, userId: todo.userId}))
+    dispatch(
+      updateTodoFetch({
+        completed: !todo.completed,
+        id: todo.id,
+        title: todo.title,
+        userId: todo.userId,
+      })
+    );
   }
 
   function updateTodoFromFetch() {
-    dispatch(updateTodoFetch({completed: todo.completed, id: todo.id, title: todoTitle, userId: todo.userId}))
+    dispatch(
+      updateTodoFetch({
+        completed: todo.completed,
+        id: todo.id,
+        title: todoTitle,
+        userId: todo.userId,
+      })
+    );
     setIsEdit(false);
   }
 
   function deleteTodoFromFetch() {
-    // deleteTodo(props.todo.id).then(() => props.onDeleteTodo(props.todo.id));
+    dispatch(removeTodo(todo.id));
   }
 
   return (
