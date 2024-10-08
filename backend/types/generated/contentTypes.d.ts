@@ -1,5 +1,31 @@
 import type { Struct, Schema } from '@strapi/strapi';
 
+export interface ApiTodoTodo extends Struct.CollectionTypeSchema {
+  collectionName: 'todos';
+  info: {
+    singularName: 'todo';
+    pluralName: 'todos';
+    displayName: 'Todo';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    Title: Schema.Attribute.Text;
+    completed: Schema.Attribute.Boolean;
+    userId: Schema.Attribute.Integer;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::todo.todo'>;
+  };
+}
+
 export interface PluginUploadFile extends Struct.CollectionTypeSchema {
   collectionName: 'files';
   info: {
@@ -850,6 +876,7 @@ export interface AdminTransferTokenPermission
 declare module '@strapi/strapi' {
   export module Public {
     export interface ContentTypeSchemas {
+      'api::todo.todo': ApiTodoTodo;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
