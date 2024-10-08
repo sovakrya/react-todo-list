@@ -11,7 +11,7 @@ export interface ApiTodoTodo extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    Title: Schema.Attribute.Text;
+    title: Schema.Attribute.Text;
     completed: Schema.Attribute.Boolean;
     userId: Schema.Attribute.Integer;
     createdAt: Schema.Attribute.DateTime;

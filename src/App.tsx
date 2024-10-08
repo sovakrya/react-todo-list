@@ -65,7 +65,7 @@ export default function App() {
 
   useEffect(() => {
     dispatch(fetchTodos());
-  }, []);
+  }, [fetchTodos]);
 
   return (
     <AppMainBox>

@@ -5,47 +5,61 @@ export type Todo = {
   title: string;
   completed: boolean;
   userId: 1;
+  documentId: string
 };
 
-export const fetchTodos = createAsyncThunk<
-  Todo[],
-  void,
-  { rejectValue: string }
->("todos/fetchTodos", async function (_, { rejectWithValue }) {
-  try {
-    const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`);
-    if (!resp.ok) {
-      throw new Error("SERVER_ERROR");
-    }
+type Data = {
+  data: Todo[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+};
 
-    return resp.json();
-  } catch (error) {
-    let msg: string;
-    if (error instanceof Error) {
-      msg = error.message;
-    } else {
-      msg = String(error);
-    }
+export const fetchTodos = createAsyncThunk<Data, void, { rejectValue: string }>(
+  "todos/fetchTodos",
+  async function (_, { rejectWithValue }) {
+    try {
+      const resp = await fetch(`${process.env.REACT_APP_BACKEND}api/todos`);
+      if (!resp.ok) {
+        throw new Error("SERVER_ERROR");
+      }
 
-    return rejectWithValue(msg);
+      return resp.json();
+    } catch (error) {
+      let msg: string;
+      if (error instanceof Error) {
+        msg = error.message;
+      } else {
+        msg = String(error);
+      }
+
+      return rejectWithValue(msg);
+    }
   }
-});
+);
 
 export const addNewTodo = createAsyncThunk<
   void,
-  Omit<Todo, "id">,
+  Omit<Todo, "id" | "documentId">,
   { rejectValue: string }
 >(
   "todos/addNewTodo",
 
-  async function (todo: Omit<Todo, "id">, { dispatch, rejectWithValue }) {
+  async function (todo: Omit<Todo, "id" | "documentId">, { dispatch, rejectWithValue }) {
     try {
-      const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`, {
+      const resp = await fetch(`${process.env.REACT_APP_BACKEND}api/todos`, {
         method: "POST",
         body: JSON.stringify({
-          title: todo.title,
-          completed: todo.completed,
-          userId: todo.userId,
+          data: {
+            title: todo.title,
+            completed: todo.completed,
+            userId: todo.userId,
+          },
         }),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
@@ -57,7 +71,7 @@ export const addNewTodo = createAsyncThunk<
       }
 
       const data = await resp.json();
-      dispatch(addTodo(data));
+      dispatch(addTodo(data.data));
     } catch (err) {
       let msg: string;
       if (err instanceof Error) {
@@ -80,14 +94,17 @@ export const updateTodoFetch = createAsyncThunk<
   async function (todo: Todo, { dispatch, rejectWithValue }) {
     try {
       const resp = await fetch(
-        `https://jsonplaceholder.typicode.com/todos/${todo.id}`,
+        `${process.env.REACT_APP_BACKEND}api/todos/${todo.documentId}`,
         {
           method: "PUT",
           body: JSON.stringify({
-            id: todo.id,
-            title: todo.title,
-            completed: todo.completed,
-            userId: todo.userId,
+            data: {
+              id: todo.id,
+              title: todo.title,
+              completed: todo.completed,
+              userId: todo.userId,
+              documentId: todo.documentId
+            },
           }),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
@@ -98,6 +115,8 @@ export const updateTodoFetch = createAsyncThunk<
       if (!resp.ok) {
         throw new Error("cant update todo. Server error");
       }
+
+      const data = await resp.json()
 
       dispatch(updateTodo(todo));
     } catch (err) {
@@ -115,15 +134,15 @@ export const updateTodoFetch = createAsyncThunk<
 
 export const removeTodo = createAsyncThunk<
   void,
-  number,
+  string,
   { rejectValue: string }
 >(
   "todo/removeTodo",
 
-  async function (todoId: number, { dispatch, rejectWithValue }) {
+  async function (documentId: string, { dispatch, rejectWithValue }) {
     try {
       const resp = await fetch(
-        `https://jsonplaceholder.typicode.com/todos/${todoId}`,
+        `{process.env.REACT_APP_BACKEND}api/todos/${documentId}`,
         {
           method: "DELETE",
         }
@@ -133,7 +152,7 @@ export const removeTodo = createAsyncThunk<
         throw new Error("cant remove todo. Server error");
       }
 
-      dispatch(deleteTodo(todoId));
+      dispatch(deleteTodo(documentId));
     } catch (err) {
       let msg: string;
       if (err instanceof Error) {
@@ -193,7 +212,7 @@ const todoSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
       state.status = "resolved";
-      state.todos = action.payload;
+      state.todos = action.payload.data;
     });
     builder.addCase(fetchTodos.pending, (state) => {
       state.status = "loading";
