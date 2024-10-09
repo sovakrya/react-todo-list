@@ -60,7 +60,7 @@ export default function TodoItem({ todo }: { todo: Todo }) {
         id: todo.id,
         title: todo.title,
         userId: todo.userId,
-        documentId: todo.documentId
+        documentId: todo.documentId,
       })
     );
   }
@@ -72,7 +72,7 @@ export default function TodoItem({ todo }: { todo: Todo }) {
         id: todo.id,
         title: todoTitle,
         userId: todo.userId,
-        documentId: todo.documentId
+        documentId: todo.documentId,
       })
     );
     setIsEdit(false);

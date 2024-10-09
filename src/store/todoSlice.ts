@@ -93,17 +93,16 @@ export const updateTodoFetch = createAsyncThunk<
   "todos/updateTodoFetch",
   async function (todo: Todo, { dispatch, rejectWithValue }) {
     try {
+      console.log(todo.documentId)
       const resp = await fetch(
         `${process.env.REACT_APP_BACKEND}api/todos/${todo.documentId}`,
         {
           method: "PUT",
           body: JSON.stringify({
             data: {
-              id: todo.id,
               title: todo.title,
               completed: todo.completed,
               userId: todo.userId,
-              documentId: todo.documentId
             },
           }),
           headers: {
@@ -118,7 +117,8 @@ export const updateTodoFetch = createAsyncThunk<
 
       const data = await resp.json()
 
-      dispatch(updateTodo(todo));
+      dispatch(updateTodo(data.data));
+      
     } catch (err) {
       let msg: string;
       if (err instanceof Error) {
@@ -142,7 +142,7 @@ export const removeTodo = createAsyncThunk<
   async function (documentId: string, { dispatch, rejectWithValue }) {
     try {
       const resp = await fetch(
-        `{process.env.REACT_APP_BACKEND}api/todos/${documentId}`,
+        `${process.env.REACT_APP_BACKEND}api/todos/${documentId}`,
         {
           method: "DELETE",
         }
@@ -166,6 +166,7 @@ export const removeTodo = createAsyncThunk<
   }
 );
 
+
 interface TodosState {
   todos: Todo[];
   status: string;
@@ -187,14 +188,15 @@ const todoSlice = createSlice({
     },
 
     updateTodo(state, action) {
+      console.log(action.payload)
       const idx = state.todos.findIndex(
-        (todo) => todo.id === action.payload.id
+        (todo) => todo.documentId === action.payload.documentId
       );
       state.todos[idx] = action.payload;
     },
 
     deleteTodo(state, action) {
-      const idx = state.todos.findIndex((todo) => todo.id === action.payload);
+      const idx = state.todos.findIndex((todo) => todo.documentId === action.payload);
 
       state.todos.splice(idx, 1);
     },
