@@ -1,7 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
 import { removeTodo, Todo, updateTodoFetch } from "../store/todoSlice";
 import todoStore from "../store/todo-store";
 import { observer } from "mobx-react-lite";
@@ -52,7 +50,7 @@ const TodoBtn = styled.button`
 export const TodoItem = observer(({ todo }: { todo: Todo }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [todoTitle, setTodoTitle] = useState("");
-  const { updateTodoAction } = todoStore;
+  const { updateTodoAction, removeTodoAction } = todoStore;
 
   function completedTodoFromFetch() {
     updateTodoAction({
@@ -75,7 +73,9 @@ export const TodoItem = observer(({ todo }: { todo: Todo }) => {
     setIsEdit(false);
   }
 
-  function deleteTodoFromFetch() {}
+  function deleteTodoFromFetch() {
+    removeTodoAction(todo.documentId);
+  }
 
   return (
     <TodoMainBox>

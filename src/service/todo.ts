@@ -77,13 +77,11 @@ export async function updateTodo(todo: Todo): Promise<ReturnedData> {
   return resp.json();
 }
 
-export async function deleteTodo(todoId: number) {
+export async function deleteTodo(documentId: string) {
   const resp = await fetch(
-    `https://jsonplaceholder.typicode.com/todos/${todoId}`,
+    `${process.env.REACT_APP_BACKEND}api/todos/${documentId}`,
     {
       method: "DELETE",
     }
   );
-
-  return resp.json();
 }

@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { addTodo, getTodos, updateTodo } from "../service/todo";
+import { addTodo, deleteTodo, getTodos, updateTodo } from "../service/todo";
 import { Todo } from "../service/todo";
 
 class TodoStore {
@@ -36,13 +36,26 @@ class TodoStore {
   updateTodoAction = async (todo: Todo) => {
     try {
       const res = await updateTodo(todo);
-
       runInAction(() => {
         const idx = this.todos.findIndex(
-          (todoArr) => todoArr.documentId === res.data.documentId
+          (val) => val.documentId === res.data.documentId
         );
 
         this.todos[idx] = res.data;
+      });
+    } catch {}
+  };
+
+  removeTodoAction = async (documentId: string) => {
+    try {
+      deleteTodo(documentId);
+
+      runInAction(() => {
+        const idx = this.todos.findIndex(
+          (val) => val.documentId === documentId
+        );
+
+        this.todos.splice(idx, 1);
       });
     } catch {}
   };
