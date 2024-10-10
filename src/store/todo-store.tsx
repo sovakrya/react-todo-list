@@ -60,13 +60,21 @@ class TodoStore {
     } catch {}
   };
 
-  removeAllTodoAction = async () => {
+  removeAllTodoAction = () => {
     this.todos.map(async (todo) => await deleteTodo(todo.documentId));
 
     runInAction(() => {
       this.todos = [];
     });
   };
+
+  completeAllTodoAction = () => {
+    this.todos.map(async (todo) => await updateTodo({completed: true, documentId: todo.documentId, id: todo.id, title: todo.title, userId: todo.userId}))
+
+    runInAction(() => {
+        this.todos.map((todo) => todo.completed = true)
+    })
+  }
 }
 
 export default new TodoStore();
