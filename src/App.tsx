@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { TodoHeader } from "./components/TodoHeader";
-import TodoItem from "./components/TodoItem";
+import { TodoItem } from "./components/TodoItem";
 import styled from "styled-components";
 import todoStore from "./store/todo-store";
 import { observer } from "mobx-react-lite";
@@ -56,9 +56,6 @@ const TodoItemWrapper = styled.div`
 `;
 
 export const App = observer(() => {
-  // const todos = useSelector((state: RootState) => state.todos.todos);
-  // const { status, error } = useSelector((state: RootState) => state.todos);
-  // const dispatch = useDispatch<AppDispatch>();
   const { getTodosAction, todos } = todoStore;
 
   useEffect(() => {

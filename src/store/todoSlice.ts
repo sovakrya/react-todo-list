@@ -93,7 +93,6 @@ export const updateTodoFetch = createAsyncThunk<
   "todos/updateTodoFetch",
   async function (todo: Todo, { dispatch, rejectWithValue }) {
     try {
-      console.log(todo.documentId)
       const resp = await fetch(
         `${process.env.REACT_APP_BACKEND}api/todos/${todo.documentId}`,
         {
@@ -188,7 +187,6 @@ const todoSlice = createSlice({
     },
 
     updateTodo(state, action) {
-      console.log(action.payload)
       const idx = state.todos.findIndex(
         (todo) => todo.documentId === action.payload.documentId
       );

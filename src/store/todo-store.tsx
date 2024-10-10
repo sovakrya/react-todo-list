@@ -1,10 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { addTodo, getTodos } from "../service/todo";
+import { addTodo, getTodos, updateTodo } from "../service/todo";
 import { Todo } from "../service/todo";
 
 class TodoStore {
   todos: Todo[] = [];
-  state: "pending" | "done" | "error"  = "pending"
+  state: "pending" | "done" | "error" = "pending";
 
   constructor() {
     makeAutoObservable(this);
@@ -12,15 +12,14 @@ class TodoStore {
 
   getTodosAction = async () => {
     try {
-
       const res = await getTodos();
 
       runInAction(() => {
         this.todos = res.data;
-        this.state = "done"
+        this.state = "done";
       });
     } catch {
-      this.state = "error"
+      this.state = "error";
     }
   };
 
@@ -29,8 +28,21 @@ class TodoStore {
       const res = await addTodo(todo);
 
       runInAction(() => {
-        console.log(res)
-        this.todos = [res.data, ...this.todos]
+        this.todos = [res.data, ...this.todos];
+      });
+    } catch {}
+  };
+
+  updateTodoAction = async (todo: Todo) => {
+    try {
+      const res = await updateTodo(todo);
+
+      runInAction(() => {
+        const idx = this.todos.findIndex(
+          (todoArr) => todoArr.documentId === res.data.documentId
+        );
+
+        this.todos[idx] = res.data;
       });
     } catch {}
   };

@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { removeTodo, Todo, updateTodoFetch } from "../store/todoSlice";
+import todoStore from "../store/todo-store";
+import { observer } from "mobx-react-lite";
 
 const TodoMainBox = styled.div`
   display: flex;
@@ -47,40 +49,33 @@ const TodoBtn = styled.button`
   }
 `;
 
-export default function TodoItem({ todo }: { todo: Todo }) {
+export const TodoItem = observer(({ todo }: { todo: Todo }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [todoTitle, setTodoTitle] = useState("");
-
-  const dispatch = useDispatch<AppDispatch>();
+  const { updateTodoAction } = todoStore;
 
   function completedTodoFromFetch() {
-    dispatch(
-      updateTodoFetch({
-        completed: !todo.completed,
-        id: todo.id,
-        title: todo.title,
-        userId: todo.userId,
-        documentId: todo.documentId,
-      })
-    );
+    updateTodoAction({
+      completed: !todo.completed,
+      id: todo.id,
+      title: todo.title,
+      userId: todo.userId,
+      documentId: todo.documentId,
+    });
   }
 
   function updateTodoFromFetch() {
-    dispatch(
-      updateTodoFetch({
-        completed: todo.completed,
-        id: todo.id,
-        title: todoTitle,
-        userId: todo.userId,
-        documentId: todo.documentId,
-      })
-    );
+    updateTodoAction({
+      completed: todo.completed,
+      id: todo.id,
+      title: todoTitle,
+      userId: todo.userId,
+      documentId: todo.documentId,
+    });
     setIsEdit(false);
   }
 
-  function deleteTodoFromFetch() {
-    dispatch(removeTodo(todo.documentId));
-  }
+  function deleteTodoFromFetch() {}
 
   return (
     <TodoMainBox>
@@ -112,4 +107,4 @@ export default function TodoItem({ todo }: { todo: Todo }) {
       )}
     </TodoMainBox>
   );
-}
+});
