@@ -59,6 +59,14 @@ class TodoStore {
       });
     } catch {}
   };
+
+  removeAllTodoAction = async () => {
+    this.todos.map(async (todo) => await deleteTodo(todo.documentId));
+
+    runInAction(() => {
+      this.todos = [];
+    });
+  };
 }
 
 export default new TodoStore();

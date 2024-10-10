@@ -56,7 +56,7 @@ const TodoItemWrapper = styled.div`
 `;
 
 export const App = observer(() => {
-  const { getTodosAction, todos } = todoStore;
+  const { getTodosAction, todos, removeAllTodoAction } = todoStore;
 
   useEffect(() => {
     getTodosAction();
@@ -70,7 +70,7 @@ export const App = observer(() => {
         <TodoListBox>
           <TodoListActionsBox>
             <TodoListBtn onClick={() => {}}>Отметить все!</TodoListBtn>
-            <TodoListBtn onClick={() => {}}>Выполнить все!</TodoListBtn>
+            <TodoListBtn onClick={removeAllTodoAction}>Выполнить все!</TodoListBtn>
           </TodoListActionsBox>
 
           <TodoItemWrapper>

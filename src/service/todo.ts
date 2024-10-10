@@ -78,10 +78,7 @@ export async function updateTodo(todo: Todo): Promise<ReturnedData> {
 }
 
 export async function deleteTodo(documentId: string) {
-  const resp = await fetch(
-    `${process.env.REACT_APP_BACKEND}api/todos/${documentId}`,
-    {
-      method: "DELETE",
-    }
-  );
+  await fetch(`${process.env.REACT_APP_BACKEND}api/todos/${documentId}`, {
+    method: "DELETE",
+  });
 }
