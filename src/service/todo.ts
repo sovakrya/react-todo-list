@@ -3,27 +3,54 @@ export type Todo = {
   title: string;
   completed: boolean;
   userId: 1;
+  documentId: string
 };
 
-export async function getTodos(): Promise<Todo[]> {
-  const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`);
+type Data = {
+  data: Todo[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+};
+
+type ReturnedData = {
+  data: Todo;
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+
+}
+
+export async function getTodos(): Promise<Data> {
+  const resp = await fetch(`${process.env.REACT_APP_BACKEND}api/todos`);
 
   return resp.json();
 }
 
-export async function addTodo(todo: Omit<Todo, "id">): Promise<Todo> {
-  const resp = await fetch(`https://jsonplaceholder.typicode.com/todos`, {
+export async function addTodo(todo: Omit<Todo, "id" | "documentId" >): Promise<ReturnedData> {
+
+  const resp = await fetch(`${process.env.REACT_APP_BACKEND}api/todos`, {
     method: "POST",
-    body: JSON.stringify({
+    body: JSON.stringify({ data: {
       title: todo.title,
       completed: todo.completed,
       userId: todo.userId,
-    }),
+  }}),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
   });
-
+  
   return resp.json();
 }
 

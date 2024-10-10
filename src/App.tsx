@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
-import TodoHeader from "./components/TodoHeader";
+import { useEffect } from "react";
+import { TodoHeader } from "./components/TodoHeader";
 import TodoItem from "./components/TodoItem";
-import { getTodos, Todo } from "./service/todo";
-import { completeAllTodo, deleteAllTodo, fetchTodos } from "./store/todoSlice";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { AppDispatch, RootState } from "./store";
+import todoStore from "./store/todo-store";
+import { observer } from "mobx-react-lite";
 
 const AppMainBox = styled.div`
   display: flex;
@@ -58,31 +55,25 @@ const TodoItemWrapper = styled.div`
   width: 100%;
 `;
 
-export default function App() {
-  const todos = useSelector((state: RootState) => state.todos.todos);
-  const { status, error } = useSelector((state: RootState) => state.todos);
-  const dispatch = useDispatch<AppDispatch>();
+export const App = observer(() => {
+  // const todos = useSelector((state: RootState) => state.todos.todos);
+  // const { status, error } = useSelector((state: RootState) => state.todos);
+  // const dispatch = useDispatch<AppDispatch>();
+  const { getTodosAction, todos } = todoStore;
 
   useEffect(() => {
-    dispatch(fetchTodos());
+    getTodosAction();
   }, []);
 
   return (
     <AppMainBox>
       <TodoHeader />
 
-      {status === "loading" && <h2>Loading...</h2>}
-      {error && <h2>An error occerd: {error}</h2>}
-
       {todos.length ? (
         <TodoListBox>
           <TodoListActionsBox>
-            <TodoListBtn onClick={() => dispatch(completeAllTodo())}>
-              Отметить все!
-            </TodoListBtn>
-            <TodoListBtn onClick={() => dispatch(deleteAllTodo())}>
-              Выполнить все!
-            </TodoListBtn>
+            <TodoListBtn onClick={() => {}}>Отметить все!</TodoListBtn>
+            <TodoListBtn onClick={() => {}}>Выполнить все!</TodoListBtn>
           </TodoListActionsBox>
 
           <TodoItemWrapper>
@@ -96,4 +87,4 @@ export default function App() {
       )}
     </AppMainBox>
   );
-}
+});

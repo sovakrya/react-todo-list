@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { addNewTodo } from "../store/todoSlice";
+import todoStore from "../store/todo-store";
+import { observer } from "mobx-react-lite";
 
 const HeaderMainBox = styled.div`
   display: flex;
@@ -48,21 +50,21 @@ const HeaderBtn = styled.button`
   }
 `;
 
-export default function TodoHeader() {
+export const TodoHeader = observer(() => {
   const [todoTitle, setTodoTitle] = useState("");
-  const dispatch = useDispatch<AppDispatch>()
+  const { addTodoAction } = todoStore;
+  // const dispatch = useDispatch<AppDispatch>()
 
-  function addTodoFromFetch(){
-    if(!todoTitle){
-      return
+  function addTodoFromFetch() {
+    if (!todoTitle) {
+      return;
     }
-    dispatch(addNewTodo({completed: false, title: todoTitle, userId: 1}))  
-    
+    // dispatch(addNewTodo({completed: false, title: todoTitle, userId: 1}))
 
-    setTodoTitle("")
-    
+    addTodoAction({ completed: false, title: todoTitle, userId: 1 });
+
+    setTodoTitle("");
   }
-
 
   return (
     <HeaderMainBox>
@@ -79,4 +81,4 @@ export default function TodoHeader() {
       </HeaderAcrionsBox>
     </HeaderMainBox>
   );
-}
+});
