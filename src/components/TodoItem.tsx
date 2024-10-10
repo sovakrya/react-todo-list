@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { removeTodo, Todo, updateTodoFetch } from "../store/todoSlice";
+import {  Todo } from "../service/todo";
 import todoStore from "../store/todo-store";
 import { observer } from "mobx-react-lite";
 

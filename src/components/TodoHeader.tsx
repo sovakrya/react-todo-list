@@ -1,9 +1,5 @@
-import React, { useState } from "react";
-import { addTodo, Todo } from "../service/todo";
+import { useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
-import { addNewTodo } from "../store/todoSlice";
 import todoStore from "../store/todo-store";
 import { observer } from "mobx-react-lite";
 
@@ -53,13 +49,11 @@ const HeaderBtn = styled.button`
 export const TodoHeader = observer(() => {
   const [todoTitle, setTodoTitle] = useState("");
   const { addTodoAction } = todoStore;
-  // const dispatch = useDispatch<AppDispatch>()
 
   function addTodoFromFetch() {
     if (!todoTitle) {
       return;
     }
-    // dispatch(addNewTodo({completed: false, title: todoTitle, userId: 1}))
 
     addTodoAction({ completed: false, title: todoTitle, userId: 1 });
 
